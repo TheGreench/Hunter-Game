@@ -1,6 +1,6 @@
 # Hunter Game
 **Hunter Game** es un juego de recolección muy similar al clásico snake.
-El jugador dispone de una barra con algo de ***energía*** y una ***fruta*** que le regenera parte de la misma.
+El jugador dispone de una barra con algo de ***energía*** y una ***fruta*** que le regenera parte de la misma y aparece en una ubicación aleatoria del tablero cada vez que es "comida".
 
 <img src="https://github.com/TheGreench/Hunter-Game/blob/master/img/ProgressBar.png" alt="Progress Bar" width="500"/>
 
