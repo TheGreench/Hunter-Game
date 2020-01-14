@@ -5,10 +5,9 @@ Desc.:  El juego se trata de capturar 'frutas' que aparecen de forma aleatoria e
         cada captura otorga energía al jugador, que debe acumular la máxima cantidad en el menor
         número de movimientos posibles. Como contrapartida, cada movimiento que realiza el jugador
         le consume parte de la energía total que tiene, perdiendo el juego si ésta llega a 0.
-
 Creado: 14/01/2020
-Actualizado: 14/01/2020
-Versión: 1.0.1b
+Actualizado: 14/01/2020 - 11:50 - GMT(-03:00)
+Versión: 1.1
 """
 
 from tkinter import Canvas, mainloop, BOTH, Tk, Frame, NE
@@ -16,9 +15,9 @@ from random import randrange as rpos
 
 main = Tk()
 main.resizable(False, False)
-main.title("Hunter Game v1.0")
-w = h = 1080
-cell = w//20
+main.title("Hunter Game v1.1")
+w = h = 700
+cell = w/20
 pasos = 0
 
 
@@ -26,7 +25,7 @@ pasos = 0
 f = Frame(height=cell, bd=0, highlightthickness=0, bg='#520')
 f.pack(fill=BOTH)
 
-energy = Canvas(f, width=cell*5, height=cell, bd=0, highlightthickness=0, bg='#5B0')
+energy = Canvas(f, width=w*.25, height=cell, bd=0, highlightthickness=0, bg='#5B0')
 energy.place(relx=0, rely=0)
 
 #   SECCIÓN DE TABLERO DE JUEGO
@@ -128,11 +127,11 @@ def mover(clic):
     pasos+=1
     c.delete('pasos')
     c.create_text(w, 0, anchor=NE, text=pasos, tags='pasos')
-    energy.config(width=energy.winfo_width()-(cell*.05))
+    energy.config(width=energy.winfo_width()-(w*.005))
 
     if player.coords == food.coords:
         food.remove(player.coords[0], player.coords[1])
-        energy.config(width=energy.winfo_width()+(cell*.25))
+        energy.config(width=energy.winfo_width()+(w*.05))
         main.update()
     
     if energy.winfo_width() == 1:
