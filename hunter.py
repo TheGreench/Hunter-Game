@@ -17,7 +17,7 @@ from random import randrange as rpos
 main = Tk()
 main.resizable(False, False)
 main.title("Hunter Game v1.0")
-w, h = 1080, 1080
+w = h = 1080
 cell = w//20
 pasos = 0
 
@@ -44,6 +44,7 @@ class Food():
     def remove(self, Px, Py):
         x, y = rpos(0, w, cell), rpos(0, h, cell)
         if (x, y) == (Px, Py):
+            '''La comida no puede generarse en el mismo lugar que el jugador.'''
             self.remove(Px, Py)
         c.delete('fruit')
         self.fruit = c.create_rectangle(x, y, x+cell, y+cell, fill='gold', tags='fruit')
@@ -60,11 +61,14 @@ class Player():
         self.coords = c.coords(self.player)
 
     def new_pos(self, x1, y1, x2, y2):
+        '''Mueve el jugador al lado opuesto de la pantalla para evitar que se
+        pierda tras los límites verticales u horizontales.'''
         c.delete('player')
         self.player = c.create_rectangle(x1, y1, x2, y2, fill='salmon', tags='player')
         self.coords = c.coords(self.player)
 
     def verificar(self):
+        '''Revisa si el jugador se sale de los límites de la pantalla.'''
         if self.coords[0] < 0:
             self.new_pos(w-cell, self.coords[1], w, self.coords[3])
         elif self.coords[1] < 0:
@@ -75,9 +79,12 @@ class Player():
             self.new_pos(self.coords[0], 0, self.coords[2], cell)
 
 def orientacion(A1, A2, A3):
+    '''Retorna 1 si la orientación del triángulo es positiva, 0 si es negativa.'''
     return 1 if (A1[0]-A3[0])*(A2[1]-A3[1])-(A1[1]-A3[1])*(A2[0]-A3[0]) >= 0 else 0
 
 def verif(P, A1, A2, A3):
+    '''Verifica que las orientaciones sean iguales, si lo son,
+    el punto (clic) está dentro de la zona de movimiento.'''
     R1 = orientacion(A1, A2, A3)
     R2 = orientacion(A1, A2, P)
     R3 = orientacion(A2, A3, P)
@@ -90,6 +97,7 @@ def verif(P, A1, A2, A3):
 def mover(clic):
     global pasos
     P = [clic.x, clic.y]
+    
     # Movimiento superior
     if P[1] < h/2:
         A1, A2, A3 = [0, 0], [w, 0], [w/2, h/2]
@@ -114,15 +122,19 @@ def mover(clic):
         else:
             '''Movimiento derecho'''
             player.move(cell, 0)
+    
     player.verificar()
+    
     pasos+=1
     c.delete('pasos')
     c.create_text(w, 0, anchor=NE, text=pasos, tags='pasos')
     energy.config(width=energy.winfo_width()-(cell*.05))
+
     if player.coords == food.coords:
         food.remove(player.coords[0], player.coords[1])
         energy.config(width=energy.winfo_width()+(cell*.25))
         main.update()
+    
     if energy.winfo_width() == 1:
         c.unbind("<Button-1>")
         c.create_text(w/2, h/2, text='GAME OVER', font=('', 20, 'bold'), tags='gameover')
